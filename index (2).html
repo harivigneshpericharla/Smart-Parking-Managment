@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ParkGrid | Smart Parking Management System</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ============ LOADER ============ -->
+<div class="loader" id="loader">
+  <div class="loader-ring">
+    <div class="loader-slot"></div>
+  </div>
+  <p>Booting ParkGrid Engine…</p>
+</div>
+
+<div class="app" id="app">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark"><i class="fa-solid fa-square-parking"></i></div>
+      <div class="brand-text">
+        <span class="brand-title">ParkGrid</span>
+        <span class="brand-sub">Smart Parking OS</span>
+      </div>
+      <button class="sidebar-collapse" id="sidebarCollapse"><i class="fa-solid fa-angles-left"></i></button>
+    </div>
+
+    <nav class="nav-menu">
+      <div class="nav-label">Operations</div>
+      <a href="#" class="nav-item active" data-page="dashboard"><i class="fa-solid fa-grid-2"></i><span>Dashboard</span></a>
+      <a href="#" class="nav-item" data-page="entry"><i class="fa-solid fa-square-arrow-up-right"></i><span>Vehicle Entry</span></a>
+      <a href="#" class="nav-item" data-page="exit"><i class="fa-solid fa-square-arrow-up-right fa-rotate-180"></i><span>Vehicle Exit</span></a>
+      <a href="#" class="nav-item" data-page="slots"><i class="fa-solid fa-border-all"></i><span>Parking Slots</span></a>
+      <a href="#" class="nav-item" data-page="search"><i class="fa-solid fa-magnifying-glass"></i><span>Search Vehicle</span></a>
+      <a href="#" class="nav-item" data-page="history"><i class="fa-solid fa-clock-rotate-left"></i><span>Parking History</span></a>
+
+      <div class="nav-label">Intelligence</div>
+      <a href="#" class="nav-item" data-page="revenue"><i class="fa-solid fa-chart-line"></i><span>Revenue Analytics</span></a>
+      <a href="#" class="nav-item" data-page="reports"><i class="fa-solid fa-file-lines"></i><span>Reports</span></a>
+      <a href="#" class="nav-item" data-page="dsa"><i class="fa-solid fa-diagram-project"></i><span>DSA Engine Room</span></a>
+
+      <div class="nav-label">System</div>
+      <a href="#" class="nav-item" data-page="settings"><i class="fa-solid fa-gear"></i><span>System Settings</span></a>
+      <a href="#" class="nav-item" data-page="about"><i class="fa-solid fa-circle-info"></i><span>About Project</span></a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="storage-pill">
+        <i class="fa-solid fa-file-shield"></i>
+        <div>
+          <span>Local Storage</span>
+          <small>Java File I/O · Synced</small>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <div class="main">
+
+    <!-- TOP NAV -->
+    <header class="topbar">
+      <button class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i></button>
+
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="globalSearch" placeholder="Search vehicle number, owner, slot…" />
+        <kbd>⌘K</kbd>
+      </div>
+
+      <div class="topbar-right">
+        <div class="datetime" id="liveClock">
+          <i class="fa-regular fa-clock"></i>
+          <span id="clockText">--:--:--</span>
+        </div>
+
+        <button class="icon-btn" id="themeToggle" title="Toggle theme"><i class="fa-solid fa-moon"></i></button>
+
+        <div class="notif-wrap">
+          <button class="icon-btn" id="notifBtn"><i class="fa-solid fa-bell"></i><span class="dot"></span></button>
+          <div class="notif-panel" id="notifPanel">
+            <div class="notif-head">Notifications</div>
+            <div class="notif-item"><i class="fa-solid fa-circle-check" style="color:var(--success)"></i><div><b>Slot B-12 freed</b><small>2 min ago</small></div></div>
+            <div class="notif-item"><i class="fa-solid fa-triangle-exclamation" style="color:var(--warning)"></i><div><b>Queue building at Gate 2</b><small>14 min ago</small></div></div>
+            <div class="notif-item"><i class="fa-solid fa-car" style="color:var(--secondary)"></i><div><b>KA-05-MX-4471 entered</b><small>21 min ago</small></div></div>
+          </div>
+        </div>
+
+        <div class="admin-profile">
+          <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Bhaskara&backgroundColor=1e293b" alt="Admin" />
+          <div class="admin-meta">
+            <span>Bhaskara Rao</span>
+            <small>System Admin</small>
+          </div>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+      </div>
+    </header>
+
+    <!-- PAGE CONTENT -->
+    <main class="content" id="content">
+
+      <!-- ================= DASHBOARD ================= -->
+      <section class="page active" id="page-dashboard">
+        <div class="page-head">
+          <div>
+            <h1>Operations Overview</h1>
+            <p>Live status of every slot, vehicle and rupee moving through the lot.</p>
+          </div>
+          <div class="page-head-actions">
+            <span class="live-pill"><span class="live-dot"></span> Live · Auto-refreshing</span>
+            <button class="btn btn-primary"><i class="fa-solid fa-plus"></i> New Entry</button>
+          </div>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card"><div class="kpi-icon blue"><i class="fa-solid fa-warehouse"></i></div><div class="kpi-meta"><span class="kpi-label">Total Slots</span><span class="kpi-value counter" data-count="180">0</span><span class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> 4 new this week</span></div></div>
+          <div class="kpi-card"><div class="kpi-icon red"><i class="fa-solid fa-car"></i></div><div class="kpi-meta"><span class="kpi-label">Occupied Slots</span><span class="kpi-value counter" data-count="127">0</span><span class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> 70.5% utilization</span></div></div>
+          <div class="kpi-card"><div class="kpi-icon green"><i class="fa-solid fa-square-parking"></i></div><div class="kpi-meta"><span class="kpi-label">Available Slots</span><span class="kpi-value counter" data-count="53">0</span><span class="kpi-trend down"><i class="fa-solid fa-arrow-down"></i> filling fast</span></div></div>
+          <div class="kpi-card"><div class="kpi-icon amber"><i class="fa-solid fa-people-line"></i></div><div class="kpi-meta"><span class="kpi-label">Waiting Queue</span><span class="kpi-value counter" data-count="6">0</span><span class="kpi-trend flat">FIFO queue active</span></div></div>
+          <div class="kpi-card"><div class="kpi-icon blue"><i class="fa-solid fa-right-to-bracket"></i></div><div class="kpi-meta"><span class="kpi-label">Parked Today</span><span class="kpi-value counter" data-count="342">0</span><span class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> 12% vs yesterday</span></div></div>
+          <div class="kpi-card"><div class="kpi-icon sky"><i class="fa-solid fa-right-from-bracket"></i></div><div class="kpi-meta"><span class="kpi-label">Exited Today</span><span class="kpi-value counter" data-count="298">0</span><span class="kpi-trend flat">44 currently inside</span></div></div>
+          <div class="kpi-card"><div class="kpi-icon green"><i class="fa-solid fa-indian-rupee-sign"></i></div><div class="kpi-meta"><span class="kpi-label">Today's Revenue</span><span class="kpi-value">₹<span class="counter" data-count="18640">0</span></span><span class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> 8.2%</span></div></div>
+          <div class="kpi-card"><div class="kpi-icon blue"><i class="fa-solid fa-wallet"></i></div><div class="kpi-meta"><span class="kpi-label">Monthly Revenue</span><span class="kpi-value">₹<span class="counter" data-count="486200">0</span></span><span class="kpi-trend up"><i class="fa-solid fa-arrow-up"></i> on target</span></div></div>
+          <div class="kpi-card"><div class="kpi-icon amber"><i class="fa-solid fa-hourglass-half"></i></div><div class="kpi-meta"><span class="kpi-label">Avg. Duration</span><span class="kpi-value">2h 14m</span><span class="kpi-trend flat">per vehicle</span></div></div>
+          <div class="kpi-card"><div class="kpi-icon red"><i class="fa-solid fa-bolt"></i></div><div class="kpi-meta"><span class="kpi-label">Peak Time</span><span class="kpi-value">6–8 PM</span><span class="kpi-trend flat">evening rush</span></div></div>
+        </div>
+
+        <div class="grid-2col">
+          <div class="card chart-card">
+            <div class="card-head"><h3>Parking Occupancy</h3><span class="tag">Live</span></div>
+            <div class="chart-wrap donut"><canvas id="occupancyChart"></canvas></div>
+            <div class="legend-row">
+              <span><i class="dot-legend" style="background:var(--success)"></i>Available</span>
+              <span><i class="dot-legend" style="background:var(--danger)"></i>Occupied</span>
+              <span><i class="dot-legend" style="background:var(--warning)"></i>Reserved</span>
+            </div>
+          </div>
+
+          <div class="card chart-card">
+            <div class="card-head"><h3>Revenue Analysis</h3>
+              <div class="seg-toggle" data-chart="revenue">
+                <button class="active" data-range="daily">Daily</button>
+                <button data-range="weekly">Weekly</button>
+                <button data-range="monthly">Monthly</button>
+              </div>
+            </div>
+            <div class="chart-wrap"><canvas id="revenueChart"></canvas></div>
+          </div>
+
+          <div class="card chart-card">
+            <div class="card-head"><h3>Vehicle Types</h3><span class="tag">Today</span></div>
+            <div class="chart-wrap donut"><canvas id="vehicleTypeChart"></canvas></div>
+            <div class="legend-row">
+              <span><i class="dot-legend" style="background:#2563EB"></i>Car</span>
+              <span><i class="dot-legend" style="background:#0EA5E9"></i>Bike</span>
+              <span><i class="dot-legend" style="background:#F59E0B"></i>Truck</span>
+              <span><i class="dot-legend" style="background:#10B981"></i>EV</span>
+            </div>
+          </div>
+
+          <div class="card chart-card">
+            <div class="card-head"><h3>Parking Trend</h3><span class="tag">Last 7 Days</span></div>
+            <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= VEHICLE ENTRY ================= -->
+      <section class="page" id="page-entry">
+        <div class="page-head">
+          <div><h1>Vehicle Entry</h1><p>Register an incoming vehicle and auto-allocate the nearest free slot.</p></div>
+        </div>
+
+        <div class="grid-2col-uneven">
+          <div class="card form-card">
+            <h3>Entry Details</h3>
+            <form id="entryForm">
+              <div class="form-row">
+                <label>Vehicle Number</label>
+                <input type="text" placeholder="e.g. TS-09-EA-1234" id="entryVehicleNo" required>
+              </div>
+              <div class="form-row">
+                <label>Owner Name</label>
+                <input type="text" placeholder="Full name" id="entryOwner" required>
+              </div>
+              <div class="form-row-split">
+                <div class="form-row">
+                  <label>Vehicle Type</label>
+                  <select id="entryType">
+                    <option>Car</option><option>Bike</option><option>Truck</option><option>EV</option>
+                  </select>
+                </div>
+                <div class="form-row">
+                  <label>Phone Number</label>
+                  <input type="text" placeholder="10-digit mobile" id="entryPhone">
+                </div>
+              </div>
+              <div class="allocate-box">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <div>
+                  <b>Nearest slot auto-allocated by Queue DSA</b>
+                  <small>Front of the free-slot queue is dequeued instantly on submit</small>
+                </div>
+              </div>
+              <div class="form-row">
+                <label>Entry Time</label>
+                <input type="text" id="entryTime" readonly>
+              </div>
+              <button type="submit" class="btn btn-primary btn-block"><i class="fa-solid fa-ticket"></i> Generate Parking Ticket</button>
+            </form>
+          </div>
+
+          <div class="card ticket-card">
+            <h3>Parking Ticket</h3>
+            <div class="ticket" id="ticketPreview">
+              <div class="ticket-top">
+                <i class="fa-solid fa-square-parking"></i>
+                <div><b>ParkGrid</b><small>Entry Ticket</small></div>
+              </div>
+              <div class="ticket-row"><span>Slot</span><b id="tSlot">—</b></div>
+              <div class="ticket-row"><span>Vehicle No.</span><b id="tVehicle">—</b></div>
+              <div class="ticket-row"><span>Owner</span><b id="tOwner">—</b></div>
+              <div class="ticket-row"><span>Type</span><b id="tType">—</b></div>
+              <div class="ticket-row"><span>Entry Time</span><b id="tTime">—</b></div>
+              <div class="ticket-barcode"></div>
+              <small class="ticket-hint">Present this ticket at exit for fee calculation</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= VEHICLE EXIT ================= -->
+      <section class="page" id="page-exit">
+        <div class="page-head">
+          <div><h1>Vehicle Exit</h1><p>Look up a vehicle, settle the bill, and free the slot.</p></div>
+        </div>
+
+        <div class="grid-2col-uneven">
+          <div class="card form-card">
+            <h3>Find Vehicle</h3>
+            <div class="form-row">
+              <label>Registration Number</label>
+              <input type="text" id="exitSearchInput" placeholder="e.g. KA-05-MX-4471">
+            </div>
+            <button class="btn btn-secondary btn-block" id="exitSearchBtn"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+
+            <div class="exit-details" id="exitDetails">
+              <div class="detail-row"><span>Vehicle Number</span><b id="eVehicle">KA-05-MX-4471</b></div>
+              <div class="detail-row"><span>Owner</span><b id="eOwner">Rahul Sharma</b></div>
+              <div class="detail-row"><span>Slot</span><b id="eSlot">A-14</b></div>
+              <div class="detail-row"><span>Entry Time</span><b id="eEntry">09:42 AM</b></div>
+              <div class="detail-row"><span>Duration</span><b id="eDuration">2h 37m</b></div>
+              <div class="detail-row highlight"><span>Parking Fee</span><b id="eFee">₹85</b></div>
+              <div class="detail-row"><span>Payment Status</span><b class="status paid">Pending</b></div>
+              <div class="exit-actions">
+                <button class="btn btn-primary" id="genReceiptBtn"><i class="fa-solid fa-receipt"></i> Generate Receipt</button>
+                <button class="btn btn-danger" id="removeVehicleBtn"><i class="fa-solid fa-square-parking"></i> Remove Vehicle</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Fee Calculation Logic</h3>
+            <div class="fee-logic">
+              <div class="fee-step"><span>0–30 min</span><b>Free grace period</b></div>
+              <div class="fee-step"><span>Car / EV</span><b>₹20 first hr + ₹15/hr</b></div>
+              <div class="fee-step"><span>Bike</span><b>₹10 first hr + ₹8/hr</b></div>
+              <div class="fee-step"><span>Truck</span><b>₹40 first hr + ₹25/hr</b></div>
+            </div>
+            <h3 style="margin-top:24px">Recent Exits</h3>
+            <div class="mini-list">
+              <div class="mini-row"><span>MH-12-AB-7789</span><b>₹65</b></div>
+              <div class="mini-row"><span>TS-07-CD-2201</span><b>₹120</b></div>
+              <div class="mini-row"><span>KA-03-XY-9087</span><b>₹40</b></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= PARKING SLOTS ================= -->
+      <section class="page" id="page-slots">
+        <div class="page-head">
+          <div><h1>Live Parking Map</h1><p>Real-time visualization of every slot across the facility.</p></div>
+          <div class="slot-legend">
+            <span><i style="background:var(--success)"></i> Available</span>
+            <span><i style="background:var(--danger)"></i> Occupied</span>
+            <span><i style="background:var(--warning)"></i> Reserved</span>
+            <span><i style="background:var(--secondary)"></i> Selected</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="zone-tabs">
+            <button class="active" data-zone="A">Zone A</button>
+            <button data-zone="B">Zone B</button>
+            <button data-zone="C">Zone C</button>
+            <button data-zone="D">Zone D — EV</button>
+          </div>
+          <div class="slot-grid" id="slotGrid"></div>
+        </div>
+
+        <div class="card slot-detail" id="slotDetailCard" style="display:none">
+          <h3>Slot Details</h3>
+          <div class="detail-row"><span>Slot Number</span><b id="sdNumber">—</b></div>
+          <div class="detail-row"><span>Vehicle Number</span><b id="sdVehicle">—</b></div>
+          <div class="detail-row"><span>Parking Time</span><b id="sdTime">—</b></div>
+          <div class="detail-row"><span>Status</span><b id="sdStatus">—</b></div>
+        </div>
+      </section>
+
+      <!-- ================= SEARCH VEHICLE ================= -->
+      <section class="page" id="page-search">
+        <div class="page-head"><div><h1>Search Vehicle</h1><p>Instant O(1) lookup powered by a HashMap of registration numbers.</p></div></div>
+
+        <div class="card">
+          <div class="search-bar big">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="vSearchInput" placeholder="Type a vehicle number… e.g. TS-09">
+          </div>
+          <div class="search-results" id="vSearchResults"></div>
+        </div>
+      </section>
+
+      <!-- ================= PARKING HISTORY ================= -->
+      <section class="page" id="page-history">
+        <div class="page-head">
+          <div><h1>Parking History</h1><p>Full log of every vehicle that has passed through the lot.</p></div>
+          <div class="page-head-actions">
+            <button class="btn btn-secondary"><i class="fa-solid fa-file-pdf"></i> Export PDF</button>
+            <button class="btn btn-secondary"><i class="fa-solid fa-file-excel"></i> Export Excel</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="table-toolbar">
+            <input type="text" id="historyFilter" placeholder="Filter by vehicle, owner, or slot…">
+            <select id="historyStatusFilter">
+              <option value="">All Statuses</option>
+              <option value="Parked">Parked</option>
+              <option value="Exited">Exited</option>
+            </select>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table" id="historyTable">
+              <thead>
+                <tr>
+                  <th data-sort="vehicle">Vehicle No. <i class="fa-solid fa-sort"></i></th>
+                  <th data-sort="owner">Owner <i class="fa-solid fa-sort"></i></th>
+                  <th data-sort="type">Type <i class="fa-solid fa-sort"></i></th>
+                  <th data-sort="slot">Slot <i class="fa-solid fa-sort"></i></th>
+                  <th data-sort="entry">Entry Time <i class="fa-solid fa-sort"></i></th>
+                  <th data-sort="exit">Exit Time <i class="fa-solid fa-sort"></i></th>
+                  <th data-sort="duration">Duration <i class="fa-solid fa-sort"></i></th>
+                  <th data-sort="fee">Fee <i class="fa-solid fa-sort"></i></th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="historyBody"></tbody>
+            </table>
+          </div>
+          <div class="pagination" id="historyPagination"></div>
+        </div>
+      </section>
+
+      <!-- ================= REVENUE ANALYTICS ================= -->
+      <section class="page" id="page-revenue">
+        <div class="page-head"><div><h1>Revenue Analytics</h1><p>Where the money is coming from, and when.</p></div></div>
+
+        <div class="kpi-grid kpi-grid-4">
+          <div class="kpi-card"><div class="kpi-icon green"><i class="fa-solid fa-indian-rupee-sign"></i></div><div class="kpi-meta"><span class="kpi-label">Today</span><span class="kpi-value">₹18,640</span></div></div>
+          <div class="kpi-card"><div class="kpi-icon blue"><i class="fa-solid fa-calendar-week"></i></div><div class="kpi-meta"><span class="kpi-label">This Week</span><span class="kpi-value">₹1,12,480</span></div></div>
+          <div class="kpi-card"><div class="kpi-icon sky"><i class="fa-solid fa-calendar-days"></i></div><div class="kpi-meta"><span class="kpi-label">This Month</span><span class="kpi-value">₹4,86,200</span></div></div>
+          <div class="kpi-card"><div class="kpi-icon amber"><i class="fa-solid fa-calendar"></i></div><div class="kpi-meta"><span class="kpi-label">This Year</span><span class="kpi-value">₹52,10,900</span></div></div>
+        </div>
+
+        <div class="grid-2col">
+          <div class="card chart-card">
+            <div class="card-head"><h3>Monthly Revenue Trend</h3></div>
+            <div class="chart-wrap"><canvas id="revTrendChart"></canvas></div>
+          </div>
+          <div class="card chart-card">
+            <div class="card-head"><h3>Revenue by Vehicle Type</h3></div>
+            <div class="chart-wrap"><canvas id="revTypeChart"></canvas></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Key Metrics</h3>
+          <div class="metric-strip">
+            <div><span>Peak Revenue Hour</span><b>6:00 PM – 7:00 PM</b></div>
+            <div><span>Most Used Slot</span><b>A-14</b></div>
+            <div><span>Avg. Parking Time</span><b>2h 14m</b></div>
+            <div><span>Best Day (Month)</span><b>Aug 1 — ₹24,120</b></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= REPORTS ================= -->
+      <section class="page" id="page-reports">
+        <div class="page-head"><div><h1>Reports</h1><p>Generate and download operational reports.</p></div></div>
+
+        <div class="report-grid">
+          <div class="card report-card">
+            <i class="fa-solid fa-square-parking"></i>
+            <h4>Parking Report</h4>
+            <p>Slot-wise occupancy and turnover for any date range.</p>
+            <div class="report-actions"><button class="btn btn-secondary sm"><i class="fa-solid fa-file-pdf"></i> PDF</button><button class="btn btn-secondary sm"><i class="fa-solid fa-file-csv"></i> CSV</button></div>
+          </div>
+          <div class="card report-card">
+            <i class="fa-solid fa-indian-rupee-sign"></i>
+            <h4>Revenue Report</h4>
+            <p>Daily, weekly and monthly earnings breakdown.</p>
+            <div class="report-actions"><button class="btn btn-secondary sm"><i class="fa-solid fa-file-pdf"></i> PDF</button><button class="btn btn-secondary sm"><i class="fa-solid fa-file-csv"></i> CSV</button></div>
+          </div>
+          <div class="card report-card">
+            <i class="fa-solid fa-car-side"></i>
+            <h4>Vehicle Report</h4>
+            <p>Vehicle type distribution and repeat-visitor stats.</p>
+            <div class="report-actions"><button class="btn btn-secondary sm"><i class="fa-solid fa-file-pdf"></i> PDF</button><button class="btn btn-secondary sm"><i class="fa-solid fa-file-csv"></i> CSV</button></div>
+          </div>
+          <div class="card report-card">
+            <i class="fa-solid fa-border-all"></i>
+            <h4>Slot Usage Report</h4>
+            <p>Heat-map of most and least used parking slots.</p>
+            <div class="report-actions"><button class="btn btn-secondary sm"><i class="fa-solid fa-file-pdf"></i> PDF</button><button class="btn btn-secondary sm"><i class="fa-solid fa-file-csv"></i> CSV</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= DSA ENGINE ROOM ================= -->
+      <section class="page" id="page-dsa">
+        <div class="page-head"><div><h1>DSA Engine Room</h1><p>The data structures & algorithms running under the hood.</p></div></div>
+
+        <div class="dsa-grid">
+          <div class="card dsa-card">
+            <div class="dsa-head"><i class="fa-solid fa-arrow-right-to-bracket"></i><h3>Queue — FIFO Slot Allocation</h3></div>
+            <p>Free slots wait in a queue; the vehicle at the front of the arrival line gets the slot at the front of the queue.</p>
+            <div class="queue-viz" id="queueViz"></div>
+            <button class="btn btn-secondary sm" id="queueDemoBtn"><i class="fa-solid fa-play"></i> Dequeue Next</button>
+          </div>
+
+          <div class="card dsa-card">
+            <div class="dsa-head"><i class="fa-solid fa-hashtag"></i><h3>HashMap — Instant Vehicle Search</h3></div>
+            <p>Registration numbers hash to buckets, giving O(1) average lookup time.</p>
+            <div class="hashmap-viz" id="hashmapViz"></div>
+          </div>
+
+          <div class="card dsa-card">
+            <div class="dsa-head"><i class="fa-solid fa-link"></i><h3>Linked List — Parking History</h3></div>
+            <p>Each visit is a node linked to the next, so history grows without resizing arrays.</p>
+            <div class="linkedlist-viz" id="linkedListViz"></div>
+          </div>
+
+          <div class="card dsa-card">
+            <div class="dsa-head"><i class="fa-solid fa-layer-group"></i><h3>Stack — Undo Last Action</h3></div>
+            <p>The last entry or exit sits on top of a stack, ready to be popped and reversed.</p>
+            <div class="stack-viz" id="stackViz"></div>
+            <button class="btn btn-secondary sm" id="stackDemoBtn"><i class="fa-solid fa-rotate-left"></i> Undo Last</button>
+          </div>
+
+          <div class="card dsa-card wide">
+            <div class="dsa-head"><i class="fa-solid fa-arrow-down-a-z"></i><h3>Sorting Algorithms</h3></div>
+            <p>Sort the history table by fee, duration or entry time using classic comparison sorts.</p>
+            <div class="sort-controls">
+              <button class="btn btn-secondary sm" data-sort-algo="bubble">Bubble Sort</button>
+              <button class="btn btn-secondary sm" data-sort-algo="insertion">Insertion Sort</button>
+              <button class="btn btn-secondary sm" data-sort-algo="merge">Merge Sort</button>
+            </div>
+            <div class="sort-bars" id="sortBars"></div>
+          </div>
+
+          <div class="card dsa-card wide">
+            <div class="dsa-head"><i class="fa-solid fa-magnifying-glass-chart"></i><h3>Searching Algorithms</h3></div>
+            <p>Compare Linear Search versus Binary Search across a sorted slot-ID array.</p>
+            <div class="search-controls">
+              <input type="number" id="searchTarget" placeholder="Slot index (0–29)" min="0" max="29">
+              <button class="btn btn-secondary sm" id="linearSearchBtn">Linear Search</button>
+              <button class="btn btn-secondary sm" id="binarySearchBtn">Binary Search</button>
+            </div>
+            <div class="search-bars" id="searchBars"></div>
+            <div class="search-status" id="searchStatus">Enter an index and choose an algorithm.</div>
+          </div>
+        </div>
+
+        <div class="card architecture-card">
+          <h3>System Architecture Flow</h3>
+          <div class="arch-flow">
+            <div class="arch-node"><i class="fa-solid fa-car"></i>Vehicle Entry</div>
+            <i class="fa-solid fa-chevron-down arch-arrow"></i>
+            <div class="arch-node"><i class="fa-solid fa-list-ol"></i>Queue Allocation</div>
+            <i class="fa-solid fa-chevron-down arch-arrow"></i>
+            <div class="arch-node"><i class="fa-solid fa-hashtag"></i>HashMap Storage</div>
+            <i class="fa-solid fa-chevron-down arch-arrow"></i>
+            <div class="arch-node"><i class="fa-solid fa-square-parking"></i>Parking Slot</div>
+            <i class="fa-solid fa-chevron-down arch-arrow"></i>
+            <div class="arch-node"><i class="fa-solid fa-link"></i>Parking History</div>
+            <i class="fa-solid fa-chevron-down arch-arrow"></i>
+            <div class="arch-node"><i class="fa-solid fa-indian-rupee-sign"></i>Revenue Calculation</div>
+            <i class="fa-solid fa-chevron-down arch-arrow"></i>
+            <div class="arch-node"><i class="fa-solid fa-right-from-bracket"></i>Vehicle Exit</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SETTINGS ================= -->
+      <section class="page" id="page-settings">
+        <div class="page-head"><div><h1>System Settings</h1><p>Configure how ParkGrid behaves.</p></div></div>
+
+        <div class="card settings-card">
+          <div class="setting-row"><div><b>Total Parking Capacity</b><small>Number of manageable slots</small></div><input type="number" value="180"></div>
+          <div class="setting-row"><div><b>Grace Period (minutes)</b><small>Free window before billing starts</small></div><input type="number" value="30"></div>
+          <div class="setting-row"><div><b>Auto-allocate Nearest Slot</b><small>Uses Queue DSA on every entry</small></div><label class="switch"><input type="checkbox" checked><span></span></label></div>
+          <div class="setting-row"><div><b>Dark Mode</b><small>Facility display theme</small></div><label class="switch"><input type="checkbox" checked><span></span></label></div>
+          <div class="setting-row"><div><b>Email Alerts</b><small>Notify admin when lot is 90% full</small></div><label class="switch"><input type="checkbox"><span></span></label></div>
+          <button class="btn btn-primary" style="margin-top:8px;width:fit-content"><i class="fa-solid fa-floppy-disk"></i> Save Settings</button>
+        </div>
+      </section>
+
+      <!-- ================= ABOUT ================= -->
+      <section class="page" id="page-about">
+        <div class="page-head"><div><h1>About This Project</h1><p>Core Java + Data Structures & Algorithms, presented for demonstration.</p></div></div>
+
+        <div class="grid-2col-uneven">
+          <div class="card about-card">
+            <h3>Project Summary</h3>
+            <p>The Smart Parking Management System is a Core Java application that automates vehicle entry and exit, allocates the nearest available slot, searches vehicles instantly, calculates fees by duration, and stores every record locally through Java File Handling — no database required.</p>
+            <h3 style="margin-top:20px">Technology Stack</h3>
+            <div class="tech-pills">
+              <span><i class="fa-brands fa-java"></i> Core Java</span>
+              <span><i class="fa-solid fa-list-ol"></i> Queue</span>
+              <span><i class="fa-solid fa-hashtag"></i> HashMap</span>
+              <span><i class="fa-solid fa-link"></i> LinkedList</span>
+              <span><i class="fa-solid fa-layer-group"></i> Stack</span>
+              <span><i class="fa-solid fa-sort"></i> Bubble Sort</span>
+              <span><i class="fa-solid fa-sort"></i> Insertion Sort</span>
+              <span><i class="fa-solid fa-sort"></i> Merge Sort</span>
+              <span><i class="fa-solid fa-magnifying-glass"></i> Linear Search</span>
+              <span><i class="fa-solid fa-magnifying-glass-chart"></i> Binary Search</span>
+              <span><i class="fa-solid fa-file"></i> File Handling</span>
+              <span><i class="fa-solid fa-cubes"></i> OOP</span>
+            </div>
+          </div>
+
+          <div class="card about-card">
+            <h3>Developed By</h3>
+            <div class="dev-profile">
+              <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Bhaskara&backgroundColor=1e293b" alt="Developer">
+              <div>
+                <b>Bhaskara Rao Chintapalli</b>
+                <small>Final-Year Engineering Project</small>
+              </div>
+            </div>
+            <p style="margin-top:14px">This dashboard is a visualization layer built to present the underlying Java + DSA engine in an enterprise-grade interface, suitable for project evaluation and demonstration.</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="footer">
+      <div>
+        <b>Smart Parking Management System</b>
+        <span>Developed using Core Java + Data Structures & Algorithms · Offline storage via Java File Handling</span>
+      </div>
+      <div class="footer-dev">Developed by <b>Bhaskara Rao Chintapalli</b></div>
+    </footer>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
